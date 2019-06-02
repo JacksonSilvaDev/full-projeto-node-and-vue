@@ -1,22 +1,22 @@
-// Criando o express
-const app = require('express')();
+const app = require('express')()
 const consign = require('consign')
 const db = require('./config/db')
+const mongoose = require('mongoose')
 
-// Passando o knex de banco de dados para o app
+require('./config/mongodb')
+
 app.db = db
+app.mongoose = mongoose
 
-// Consign é usado para ajudar nas dependências dos arquivos com as funções
 consign()
-.then('./config/middlewares.js')
-.then('./api/validation.js')
-.then('./api')
-.then('./config/routes.js')
+    .include('./config/passport.js')
+    .then('./config/middlewares.js')
+    .then('./api/validation.js')
+    .then('./api')
+    .then('./schedule')
+    .then('./config/routes.js')
+    .into(app)
 
-.into(app)
-
-
-// Iniciando na porta 300
-app.listen(3000, () => {
-    console.log('backend executando...')
+app.listen(4000, () => {
+    console.log('Backend executando...')
 })
