@@ -9,6 +9,7 @@ app.db = db
 // Consign é usado para ajudar nas dependências dos arquivos com as funções
 consign()
 .then('./config/middlewares.js')
+.then('./api/validation.js')
 .then('./api')
 .then('./config/routes.js')
 
