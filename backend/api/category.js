@@ -26,4 +26,29 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
         }
     }
+
+    const remove = async (req, res) => {
+        try {
+            existOrError(req.params.id, 'Código da Categoria não informado.')
+
+            const subcategory = await app.db('categories')
+            .where({parentId: req.params.id})
+
+            notExistOrError(subcategory, 'Categoria possui subcategorias.')
+
+            const articles = await app.db('articles')
+            .where({categoryId: req.params.id})
+
+            notExistOrError(articles, 'Categoria possui artigos.')
+
+            const rowsDeleted = await app.db('categories')
+            .where({id: req.params.id}).del()
+
+            existOrError(rowsDeleted, 'Categoria não foi encontrada')
+
+            res.status(204).send()
+        } catch (err) {
+            res.status(400).send(err)
+        }
+    }
 }
